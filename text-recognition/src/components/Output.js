@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 function Output({ response }) {
-  const {
-    filename,
-    output: { word },
-    output: { confidences },
-  } = response;
+  useEffect(() => {
+    console.log(response);
+  }, [response]);
+
+  const { filename, output } = response;
+
   return (
     <div>
       <p>filename={filename}</p>
-      <p>Output = {word}</p>
+      <p className="display-linebreak">Output={output}</p>
     </div>
   );
 }
