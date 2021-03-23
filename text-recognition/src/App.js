@@ -46,12 +46,8 @@ function App() {
       .then(function (response) {
         console.log(response.data);
         console.log(response.data.output);
-        const {
-          filename,
-          output: { word },
-          output: { confidences },
-        } = response.data;
-        console.log(filename, word, confidences);
+        const { filename, output } = response.data;
+        console.log(filename, output);
         setApiResponse(response.data);
       })
       .catch(function (error) {
