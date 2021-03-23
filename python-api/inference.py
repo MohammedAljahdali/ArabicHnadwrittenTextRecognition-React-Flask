@@ -66,8 +66,8 @@ def transform_image(img: np.ndarray, height: int = 32):
         raise ValueError("Current Image Shape:", img.shape, "Expected Image of shape (height, width, channels)")
     if img.shape[2] != 3:
         raise ValueError("Expected Image to have 3 channels")
-    img = prepareImg(img)
-    img = np.stack((img,) * 3, axis=-1)
+    # img = prepareImg(img)
+    # img = np.stack((img,) * 3, axis=-1)
     img = pad(img, padding=20, fill=255)
     img = resize(img, height)
     img = img / 255

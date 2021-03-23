@@ -30,7 +30,7 @@ class MyAPI(Resource):
         singleImage = True if request.form['singleImage'] == 'true' else False
         print(singleImage)
         if not singleImage:
-            # img = detection.main(img)
+            # img, line_begin_indices = detection.main(img)
             img, line_begin_indices = Detection(img)
             print(len(img))
         output = main(img)
@@ -40,7 +40,9 @@ class MyAPI(Resource):
                 text_output += " ".join(list(line))
                 text_output += '\n'
             output['word'] = text_output
-        res = {"filename": request.files['image'].filename, 'output': output}
+        else:
+            text_output = output['word']
+        res = {"filename": request.files['image'].filename, 'output': text_output}
         return res
 
 api.add_resource(MyAPI, '/')

@@ -119,6 +119,7 @@ def sort_words(res):
     # sort all rect by their y
     boxes.sort(key=lambda b: b[1])
     # initially the line bottom is set to be the bottom of the first rect
+    line_begin_indices = []
     line_bottom = boxes[0][1]+boxes[0][3]-1
     line_begin_idx = 0
     for i in range(len(boxes)):
@@ -128,19 +129,21 @@ def sort_words(res):
             # sort the previous line by their x
             boxes[line_begin_idx:i] = sorted(boxes[line_begin_idx:i], key=lambda b: b[0], reverse=True)
             line_begin_idx = i
+            line_begin_indices.append(i)
         # regardless if it's a new line or not
         # always update the line bottom
         line_bottom = max(boxes[i][1]+boxes[i][3]-1, line_bottom)
     # sort the last line
     boxes[line_begin_idx:] = sorted(boxes[line_begin_idx:], key=lambda b: b[0], reverse=True)
-    return boxes
+    return boxes, line_begin_indices
 
 def main(img):
-    _, res = wordSegmentation(img, 25, 13, 13, 800, 3000, True, (2,4), 5) # segment the image into words
+    # kernelSize=25, sigma=11, theta=7, minArea=0, height=3000, dilate=False, dilate_k_size=(10,5), dilate_iter=4
+    _, res = wordSegmentation(img, kernelSize=25, sigma=11, theta=11, minArea=1000, height=2000 , dilate=True, dilate_k_size=(8,10), dilate_iter=12) # segment the image into words
     # the output of wordSegmentation is list of tuples
-    sorted_words = sort_words(res)
+    sorted_words, line_begin_indices = sort_words(res)
     words = []
     for (i, w) in tqdm(enumerate(sorted_words), desc="Saving Words", leave=False):
         (_, _, _, _, word_img) = w # the tuple is composed of bounding box coords and word image we only care about the image in this code
         words.append(word_img)
-    return words
+    return words, line_begin_indices
